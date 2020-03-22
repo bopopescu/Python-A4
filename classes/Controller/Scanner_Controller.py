@@ -16,8 +16,8 @@ class dataHandler:
         self.servicesFound = []
         #
         self.nm = nmap.PortScanner()
-        self.nm.scan(self.host, '1-100')
-        # scanned de host (IP) vanaf poort 1 t/m 65535.
+        self.nm.scan(self.host, '1-1024')
+        # scanned de host (IP) vanaf poort 1 t/m 65535 (In dit geval heb ik het tot 1024 gedaan zodat het niet al te lang duurt).
         self.appendPorts()
 
     def appendPorts(self):
@@ -48,6 +48,6 @@ class dataHandler:
             self.centerText.insert(tk.INSERT, "\n\nscan on host {} COMPLETED!".format(self.host))
             self.centerText.configure(state='disabled')
             if len(self.servicesFound) == 0:
-                self.model.insertData(self.host, self.portsFound, None)
+                self.model.createQuery(self.host, self.portsFound, None)
             else:
-                self.model.insertData(self.host, self.portsFound, self.servicesFound)
+                self.model.createQuery(self.host, self.portsFound, self.servicesFound)
