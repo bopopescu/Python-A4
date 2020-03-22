@@ -47,6 +47,7 @@ class dataHandler:
             self.centerText.configure(state='normal')
             self.centerText.insert(tk.INSERT, "\n\nscan on host {} COMPLETED!".format(self.host))
             self.centerText.configure(state='disabled')
+            print("The following services were found \nHOST: {} \nPORTS: {} \nSERVICES: {}".format(self.host, str(self.portsFound,), str(self.servicesFound) ))
             if len(self.servicesFound) == 0:
                 self.model.createQuery(self.host, self.portsFound, None)
             else:
