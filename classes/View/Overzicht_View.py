@@ -8,14 +8,15 @@ class Window:
         self.model = model
         #
         self.root = tk.Tk()
-        self.root.configure()
         self.root.title("MVC applicatie - overzicht poortscanner")
         self.root.geometry("1000x600")
         #
         self.textHeading()
-        self.textCenter()
+        self.controller.setTextCenter()
+        self.getTextCenter()
         self.exitButton()
         self.portScanButton()
+        self.refreshButton()
         # tekstveld en de buttons die op het scherm moeten komen worden met de volgende functies aangemaakt.
         self.root.mainloop()
 
@@ -25,21 +26,30 @@ class Window:
         self.topText.pack()
         self.topText.configure(state='disabled')
 
-    def textCenter(self):
+    def getTextCenter(self):
         self.centerText = tk.Text(self.root, width=115, height=90, borderwidth=2, relief="sunken")
-        for rows in range(len(self.model.data)):
-                self.centerText.insert(tk.INSERT, "{rows}\t{id}\t{host}\t\t\t\t{ports}\t\t\t\t{services}\n\n".format(rows=rows + 1,
-                                                                                                          id=self.controller.getId(rows),
-                                                                                                          host=self.controller.getHost(rows),
-                                                                                                          ports=self.controller.getOpenPorts(rows),
-                                                                                                          services=self.controller.getService(rows)))
+        self.centerText.configure(state='normal')
+        self.centerText.delete(1.0, tk.END)
+        number = 0
+        for rows in self.controller.host:
+            number = number + 1
+            self.centerText.insert(tk.INSERT, "{NUM}\t{ID}\t{HOST}\t\t\t\t{OPENPORTS}\t\t\t\t{SERVICE}\n\n".format(NUM=number,
+                                                                                                                    ID=rows.getId(),
+                                                                                                                    HOST=rows.getHost(),
+                                                                                                                    OPENPORTS=rows.getOpenPorts(),
+                                                                                                                    SERVICE=rows.getService()))
+        self.centerText.update_idletasks()
         self.centerText.pack()
         self.centerText.configure(state='disabled')
 
     def exitButton(self):
         self.exitButton = tk.Button(self.root, text="Exit", width=8, command=self.root.destroy)
-        self.exitButton.place(x=700, y=550)
+        self.exitButton.place(x=600, y=550)
 
     def portScanButton(self):
-        self.portScanButton = tk.Button(self.root, width=8, text="Portscan", command=lambda: [self.root.destroy(), os.system("python3 PortscanMain.py")])
-        self.portScanButton.place(x=800, y=550)
+        self.portScanButton = tk.Button(self.root, width=8, text="Portscan", command=lambda: os.system("python3 PortscanMain.py"))
+        self.portScanButton.place(x=700, y=550)
+
+    def refreshButton(self):
+        self.refreshButton = tk.Button(self.root, width=8, text="refresh", command=lambda: [self.controller.setTextCenter(), self.getTextCenter()])
+        self.refreshButton.place(x=800, y=550)

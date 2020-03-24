@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from classes.Controller.Overzicht_Controller import *
 from classes.Model.Overzicht_Model import *
 from classes.View.Overzicht_View import *
